@@ -4,13 +4,7 @@
 from Bio import SeqIO
 import re, argparse, sys
 
-
-#outfile = "patate"
-#fastafile = "/homedir/ortega-abboud/gemo/CRAC_v1.3.2/references/burkho/GY11_Burk_cdna.fasta"
-#nucleotide = "A"
-
-
-
+## Import options
 
 parser = argparse.ArgumentParser()
 
@@ -21,26 +15,20 @@ parser.add_argument("-n", "--nucleotide", dest="nucleotide", type=str, default=N
 args=parser.parse_args()
 
 
-
+## Create variables
 spanlist = []
 dicospan = {}
 
-#DEBUG:
-a = 0
+#DEBUG:a = 0
 
 with open(args.fastafile, 'rU') as handle:
 	for record in SeqIO.parse(handle, "fasta") :
-#DEBUG:
-		while a < 1 :
-#DEBUG:
-			print(a)
-#DEBUG:
-			a += 1
-#DEBUG:
-			print(record.seq)
+#DEBUG:		while a < 1 :
+#DEBUG:			print(a)
+#DEBUG:			a += 1
+#DEBUG:			print(record.seq)
 			spanlist = spanlist + [m.span() for m in re.finditer("["+args.nucleotide+"]+", str(record.seq))]
-#DEBUG:
-			print(spanlist)
+#DEBUG:			print(spanlist)
 
 
 
