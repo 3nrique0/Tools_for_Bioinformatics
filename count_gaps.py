@@ -1,11 +1,10 @@
 #! /usr/local/bioinfo/python/3.4.3/bin/python
 
-# import libraries
+## import libraries
 from Bio import SeqIO
 import re, argparse, sys
 
-## Import options
-
+## Parse options
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-f", "--fasta", dest="fastafile", type=str, default=None, help="Fasta file")
@@ -15,12 +14,16 @@ parser.add_argument("-n", "--nucleotide", dest="nucleotide", type=str, default=N
 args=parser.parse_args()
 
 
-## Create variables
+
+## Declare variables
 spanlist = []
 dicospan = {}
-
 #DEBUG:a = 0
 
+
+## Import fasta and return a list with tuples containing
+## the "start" and the "stop" of the stretch of one letter nucleotide
+## The list for each fasta entry will be concatenated in a bigger list
 with open(args.fastafile, 'rU') as handle:
 	for record in SeqIO.parse(handle, "fasta") :
 #DEBUG:		while a < 1 :
@@ -31,7 +34,9 @@ with open(args.fastafile, 'rU') as handle:
 #DEBUG:			print(spanlist)
 
 
-
+## Parse the list containing tuples (start, stop)
+## Calculate the lenght of the stretch (stop-start)
+## Add it to a dictionary, key = lenght of the stretch; value = number of occurences
 for i in spanlist:
 	diff = i[1]-i[0]
 	if diff in dicospan.keys():
@@ -39,10 +44,11 @@ for i in spanlist:
 	else:
 		dicospan[diff] = 1
 
-print(dicospan)
+#DEBUG:print(dicospan)
 
+
+## Save to file
 with open(args.outfile, 'w') as df:
-	df.write('Strands of {0}\tNumber of occurrences\n'.format(args.nucleotide))
+	df.write('#Stretch_of_{0}\tNumber_of_occurrences\n'.format(args.nucleotide))
 	for i in sorted(dicospan.keys()):
 		df.write('{0}\t{1}\n'.format(i, dicospan[i]))
-	
