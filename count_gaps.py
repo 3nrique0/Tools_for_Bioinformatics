@@ -18,6 +18,7 @@ args=parser.parse_args()
 ## Declare variables
 spanlist = []
 dicospan = {}
+totaloccurrences = 0
 #DEBUG:a = 0
 
 
@@ -39,6 +40,7 @@ with open(args.fastafile, 'rU') as handle:
 ## Add it to a dictionary, key = lenght of the stretch; value = number of occurences
 for i in spanlist:
 	diff = i[1]-i[0]
+	totaloccurrences = totaloccurrences + diff
 	if diff in dicospan.keys():
 		dicospan[diff] = dicospan[diff] + 1
 	else:
@@ -52,3 +54,5 @@ with open(args.outfile, 'w') as df:
 	df.write('#Stretch_of_{0}\tNumber_of_occurrences\n'.format(args.nucleotide))
 	for i in sorted(dicospan.keys()):
 		df.write('{0}\t{1}\n'.format(i, dicospan[i]))
+	df.write('#Total_{0}\t{1}\n'.format(args.nucleotide, totaloccurrences))
+	
