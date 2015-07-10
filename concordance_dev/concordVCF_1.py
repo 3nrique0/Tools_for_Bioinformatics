@@ -100,6 +100,7 @@ def different_chromosome(line1_list, line2_list, file_handle_1, file_handle_2):
 		print("\t In IF loop 1")
 		while line1_list[0] < line2_list[0] :
 			print("\tCase A-inside while : ch in list1 is < list2")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
 			print("\tline right here: {0}".format(line1_list))
 			line1 = file_handle_1.readline()
 			line1 = line1.replace('\n','')
@@ -112,6 +113,7 @@ def different_chromosome(line1_list, line2_list, file_handle_1, file_handle_2):
 		print("\t In IF loop 2")
 		while line1_list[0] > line2_list[0] :
 			print("\tCase B-inside while : ch in list1 is > list2")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
 			print("\tline right here: {0}".format(line2_list))
 			line2 = file_handle_2.readline()
 			line2 = line2.replace('\n','')
