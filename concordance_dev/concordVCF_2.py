@@ -2,6 +2,7 @@
 import argparse
 
 
+
 def skim_comments(line, header, file_handle):
 	'''
 	Input = line from VCF,
@@ -95,27 +96,29 @@ def different_chromosome(line1_list, line2_list, file_handle_1, file_handle_2):
 	
 	## If chromosome in file1 < file2
 	if line1_list[0] < line2_list[0] :
-		print("\tCase A : ch in list1 is < list2")
-		print("\t In IF loop 1")
+#DEBUG:		print("\tCase A : ch in list1 is < list2")
+#DEBUG:		print("\t In IF loop 1")
 		while line1_list[0] < line2_list[0] :
-			print("\tCase A-inside while : ch in list1 is < list2")
-			print("\tline right here: {0}".format(line1_list))
+#DEBUG:			print("\tCase A-inside while : ch in list1 is < list2")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
+#DEBUG:			print("\tline right here: {0}".format(line1_list))
 			line1 = file_handle_1.readline()
 			line1 = line1.replace('\n','')
 			line1_list = line1.split('\t')
-			print("\tpassing to next line : {0}".format(line1_list))
+#DEBUG:			print("\tpassing to next line : {0}".format(line1_list))
 	
 	## If chromosome in file2 < file1
 	elif line1_list[0] > line2_list[0] :
-		print("\tCase B : ch in list2 is < list1")
-		print("\t In IF loop 2")
+#DEBUG:		print("\tCase B : ch in list2 is < list1")
+#DEBUG:		print("\t In IF loop 2")
 		while line1_list[0] > line2_list[0] :
-			print("\tCase B-inside while : ch in list1 is > list2")
-			print("\tline right here: {0}".format(line2_list))
+#DEBUG:			print("\tCase B-inside while : ch in list1 is > list2")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
+#DEBUG:			print("\tline right here: {0}".format(line2_list))
 			line2 = file_handle_2.readline()
 			line2 = line2.replace('\n','')
 			line2_list = line2.split('\t')
-			print("\tpassing to next line : {0}".format(line2_list))
+#DEBUG:			print("\tpassing to next line : {0}".format(line2_list))
 			
 	## It should return lists in which both chromosomes are the same
 	return line1_list, line2_list
@@ -202,8 +205,7 @@ def __main__():
 				print("### NOT on the same chromosome : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 				while vcf1_line[0] != vcf2_line[0] :
 					print("\t\tinto the while")
-					vcf1_line, vcf2_line = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2) #line1, line2, file_handle_1, file_handle_2
-#					line1, line2 = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2) #line1, line2, file_handle_1, file_handle_2
+					vcf1_line, vcf2_line = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2)
 				print("\n### After Different chromosmes : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 			
 
