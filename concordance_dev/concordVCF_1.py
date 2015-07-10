@@ -43,7 +43,8 @@ def finish_it(line1, line2, file_handle_1, file_handle_2):
 	Target: attribute these lines as "file specific".
 	'''
 
-#DEBUG:	print('##### inside finish_it')
+#DEBUG:
+	print('\n#Inside finish_it')
 #DEBUG:		print('line 1 : {0}'.format(line1))
 	
 	if line1 == '':
@@ -54,7 +55,7 @@ def finish_it(line1, line2, file_handle_1, file_handle_2):
 			line2 = line2.split('\t')
 			
 			## Here there will be stuff to be done
-			
+			print("line 2 : {0}".format(line2))
 			
 			
 		
@@ -73,7 +74,7 @@ def finish_it(line1, line2, file_handle_1, file_handle_2):
 			line1 = line1.split('\t')
 			
 			## Here there will be stuff to be done
-			
+			print("line 1 : {0}".format(line1))
 			
 			
 
@@ -91,24 +92,31 @@ def different_chromosome(line1_list, line2_list, file_handle_1, file_handle_2):
 	All the lines "passed" will be sent to "file specific[1|2]" output file
 	'''
 	
-	## If chromosome in file1 < file2
 	print("\t## inside DIFFERENT_CHROMOSOME")
+	
+	## If chromosome in file1 < file2
 	if line1_list[0] < line2_list[0] :
-		print("\t## Case A : ch in list1 is < list2")
-		print("\t## list 1 CH  {0} ---- list 2 CH  {1}".format(line1_list[0], line2_list[0]))
+		print("\tCase A : ch in list1 is < list2")
+		print("\t In IF loop 1")
 		while line1_list[0] < line2_list[0] :
-			print("\t## Case A-inside while : ch in list1 is < list2")
-			print("\t## line right here: {0}".format(line1_list))
+			print("\tCase A-inside while : ch in list1 is < list2")
+			print("\tline right here: {0}".format(line1_list))
 			line1 = file_handle_1.readline()
 			line1 = line1.replace('\n','')
 			line1_list = line1.split('\t')
+			print("\tpassing to next line : {0}".format(line1_list))
 	
 	## If chromosome in file2 < file1
-#	elif: line2_list[0] < line1_list[0] :
-#		while line2_list[0] < line1_list[0] :
-#			line2 = file_handle_2.readline()
-#			line2 = line2.replace('\n','')
-#			line2_list = line2.split('\t')
+	elif line1_list[0] > line2_list[0] :
+		print("\tCase B : ch in list2 is < list1")
+		print("\t In IF loop 2")
+		while line1_list[0] > line2_list[0] :
+			print("\tCase B-inside while : ch in list1 is > list2")
+			print("\tline right here: {0}".format(line2_list))
+			line2 = file_handle_2.readline()
+			line2 = line2.replace('\n','')
+			line2_list = line2.split('\t')
+			print("\tpassing to next line : {0}".format(line2_list))
 			
 	## It should return lists in which both chromosomes are the same
 	return line1_list, line2_list
@@ -174,28 +182,38 @@ def __main__():
 		## Loop to read next line as long as the line is not empty
 		while line1 != "" and line2 != "":
 			
-#DEBUG:			print("\nLoop number = {0}".format(counter_while_loop))
+#DEBUG:
+			print("\nLoop number = {0}".format(counter_while_loop))
 			
 		
 			## Skim the comment lines and get the headers
 			vcf1_line, vcf1_header = skim_comments(line1, vcf1_header, vcf1)
 			vcf2_line, vcf2_header = skim_comments(line2, vcf2_header, vcf2)
+			
+			print("VCFLINE : {0}".format(vcf1_line))
+			print("VCFLINE : {0}".format(vcf2_line))
 
 			## Here's the place to do stuff with the lines
 			
 			## If they are on the same chromosome : PRINT
 			if  vcf1_line[0] == vcf2_line[0]:
-#				print("asdf".format(vcf1_line[0], vcf2_line[0]))
-				print("###Line 1 and 2 are on the same chromosome : \n {0} ----- {1}".format(vcf1_line[0], vcf2_line[0]))
+
+				print("### Line 1 and 2 are on the same chromosome : \n {0} ----- {1}".format(vcf1_line[0], vcf2_line[0]))
 			else :
-				different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2) #line1, line2, file_handle_1, file_handle_2
-				print("@@@Different chromosmes : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
+				print("### NOT on the same chromosome : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
+				while vcf1_line[0] != vcf2_line[0] :
+					print("\t\tinto the while")
+					vcf1_line, vcf2_line = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2) #line1, line2, file_handle_1, file_handle_2
+#					line1, line2 = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2) #line1, line2, file_handle_1, file_handle_2
+				print("\n### After Different chromosmes : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 			
 
-#DEBUG:			print("Table 1 contents: line = {0} --- header = {1}".format(vcf1_line, vcf1_header))
-#DEBUG:			print("Table 2 contents: line = {0} --- header = {1}".format(vcf2_line, vcf2_header))
+#DEBUG:
+			print("Table 1 contents: line = {0} --- header = {1}".format(vcf1_line, vcf1_header))
+#DEBUG:
+			print("Table 2 contents: line = {0} --- header = {1}".format(vcf2_line, vcf2_header))
 
-
+	
 			## Read the next line
 			line1 = vcf1.readline()
 			line2 = vcf2.readline()
