@@ -96,33 +96,104 @@ def different_chromosome(line1_list, line2_list, file_handle_1, file_handle_2):
 	
 	## If chromosome in file1 < file2
 	if line1_list[0] < line2_list[0] :
-#DEBUG:		print("\tCase A : ch in list1 is < list2")
-#DEBUG:		print("\t In IF loop 1")
+#DEBUG:
+		print("\tCase A : ch in list1 is < list2")
+#DEBUG:
+		print("\t In IF loop 1")
 		while line1_list[0] < line2_list[0] :
-#DEBUG:			print("\tCase A-inside while : ch in list1 is < list2")
+#DEBUG:
+			print("\tCase A-inside while : ch in list1 is < list2")
 			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
-#DEBUG:			print("\tline right here: {0}".format(line1_list))
+#DEBUG:
+			print("\tline right here: {0}".format(line1_list))
 			line1 = file_handle_1.readline()
 			line1 = line1.replace('\n','')
 			line1_list = line1.split('\t')
-#DEBUG:			print("\tpassing to next line : {0}".format(line1_list))
+#DEBUG:
+			print("\tpassing to next line : {0}".format(line1_list))
 	
 	## If chromosome in file2 < file1
 	elif line1_list[0] > line2_list[0] :
-#DEBUG:		print("\tCase B : ch in list2 is < list1")
-#DEBUG:		print("\t In IF loop 2")
+#DEBUG:
+		print("\tCase B : ch in list2 is < list1")
+#DEBUG:
+		print("\t In IF loop 2")
 		while line1_list[0] > line2_list[0] :
-#DEBUG:			print("\tCase B-inside while : ch in list1 is > list2")
+#DEBUG:
+			print("\tCase B-inside while : ch in list1 is > list2")
 			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
-#DEBUG:			print("\tline right here: {0}".format(line2_list))
+#DEBUG:
+			print("\tline right here: {0}".format(line2_list))
 			line2 = file_handle_2.readline()
 			line2 = line2.replace('\n','')
 			line2_list = line2.split('\t')
-#DEBUG:			print("\tpassing to next line : {0}".format(line2_list))
+#DEBUG:
+			print("\tpassing to next line : {0}".format(line2_list))
 			
 	## It should return lists in which both chromosomes are the same
 	return line1_list, line2_list
 	
+
+
+
+def different_coordinate(line1_list, line2_list, file_handle_1, file_handle_2):
+	'''
+	In case chromosomes are different,
+	the pointer with the lesser chromosome number will keep going on line by line
+	until the chromosome number is the same.
+	All the lines "passed" will be sent to "file specific[1|2]" output file
+	'''
+	
+	print("\t## inside DIFFERENT_COORDINATE")
+	
+	## If chromosome in file1 < file2
+	if line1_list[1] < line2_list[1] :
+#DEBUG:
+		print("\t\t Case A.1 : coord in list1 is < list2")
+#DEBUG:
+		print("\t\t In IF loop 1")
+		while line1_list[1] < line2_list[1] :
+#DEBUG:
+			print("\t Case A.1-inside while : coord in list1 is < list2")
+			print("\t THIS LINE WILL GO TO THE FILE-SPECIFIC LINES")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
+#DEBUG:
+			print("\t\t line right here: {0}".format(line1_list))
+			line1 = file_handle_1.readline()
+			
+			## In case of failure: Check if there is no change on chromosome.
+			
+			line1 = line1.replace('\n','')
+			line1_list = line1.split('\t')
+#DEBUG:
+			print("\t\t passing to next line : {0}".format(line1_list))
+	
+	## If chromosome in file2 < file1
+	elif line1_list[1] > line2_list[1] :
+#DEBUG:
+		print("\t\t Case A.2 : coord in list2 is < list1")
+#DEBUG:
+		print("\t\t In IF loop 2")
+		while line1_list[1] > line2_list[1] :
+#DEBUG:
+			print("\t\t Case A.2-inside while : coord in list1 is > list2")
+			print("\t THIS LINE WILL GO TO THE FILE-SPECIFIC LINES")
+			## THIS LINE WILL GO TO THE FILE-SPECIFIC LINES
+#DEBUG:
+			print("\t\t line right here: {0}".format(line2_list))
+			line2 = file_handle_2.readline()
+			
+			## In case of failure: Check if there is no change on chromosome.
+			
+			line2 = line2.replace('\n','')
+			line2_list = line2.split('\t')
+#DEBUG:
+			print("\t\t passing to next line : {0}".format(line2_list))
+			
+	## It should return lists in which both lines are the same
+	return line1_list, line2_list
+
+
 
 
 def parse_per_position(line1, line2):
@@ -135,14 +206,14 @@ def parse_per_position(line1, line2):
 
 
 
-#########################################################################################
-#####   #####   ######   ######  ###   #####  ###########################################
-#####  #  #  #  ####  ##  #####  ###  #  ###  ###########################################
-#####  ##  ###  ###  ####  ####  ###  ##  ##  ###########################################
-#####  #######  ###        ####  ###  ###  #  ###########################################
-#####  #######  ###  ####  ####  ###  ####    ###########################################
-#####  #######  ###  ####  ####  ###  #####   ###########################################
-#########################################################################################
+####################################################
+#####   #####   ######   ######  ###   #####  ######
+#####  #  #  #  ####  ##  #####  ###  #  ###  ######
+#####  ##  ###  ###  ####  ####  ###  ##  ##  ######
+#####  #######  ###        ####  ###  ###  #  ######
+#####  #######  ###  ####  ####  ###  ####    ######
+#####  #######  ###  ####  ####  ###  #####   ######
+####################################################
 
 
 def __main__():
@@ -171,7 +242,7 @@ def __main__():
 	vcf2_line = []		## the variables line1 and line2 are the variables that allow to read the files
 
 #DEBUG:
-	counter_while_loop = 0
+	counter_while_loop = 1
 
 	## Open both vcf files at the same time, close the loop when one of the files is over.
 	with open(args.vcf1, 'r') as vcf1, open(args.vcf2, 'r') as vcf2:
@@ -199,8 +270,20 @@ def __main__():
 			
 			## If they are on the same chromosome : PRINT
 			if  vcf1_line[0] == vcf2_line[0]:
-
 				print("### Line 1 and 2 are on the same chromosome : \n {0} ----- {1}".format(vcf1_line[0], vcf2_line[0]))
+				
+				#############################
+				## Check if the coordinate is the same :: THIS INDENT SECTION MUST BE TURNED TO A FUNCTION !
+				#############################
+				if vcf1_line[1] == vcf2_line[1]:
+					print("### Line 1 and 2 have the same location : \n {0} ----- {1}".format(vcf1_line[1], vcf2_line[1]))
+					print("\t From SAME COORDINATES: Do stuff for equal position lines")
+				else:
+					vcf1_line, vcf2_line = different_coordinate(vcf1_line, vcf2_line, vcf1, vcf2)
+					print("\t From DIFFERENT COORDINATES: Do stuff for equal position lines")
+					print("Now the coordinates are really the same")
+				##############################
+				
 			else :
 				print("### NOT on the same chromosome : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 				while vcf1_line[0] != vcf2_line[0] :
