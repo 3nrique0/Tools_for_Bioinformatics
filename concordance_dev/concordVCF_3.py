@@ -2,6 +2,7 @@
 import argparse
 
 
+
 def skim_comments(line, header, file_handle):
 	'''
 	Input = line from VCF,
@@ -201,7 +202,7 @@ def different_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, o
 	## It should return lists in which both lines are the same
 	return line1_list, line2_list
 
-def find_same_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, common, f1_spe, f2_spe):
+def find_same_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, common, outfile1, outfile2):
 #	(line1_list, line2_list, file_handle_1, file_handle_2)
 	'''
 	Go for the next same coordinate and save to file the common lines and the different lines
@@ -211,7 +212,7 @@ def find_same_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, c
 		print("\t From SAME COORDINATES: Save to common file (save file 1 at first)")
 		common.write("\t".join(line1_list)+"\n")
 	else:
-		line1_list, line2_list = different_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, f1_spe, f2_spe)
+		line1_list, line2_list = different_coordinate(line1_list, line2_list, file_handle_1, file_handle_2, outfile1, outfile1)
 		print("\t From DIFFERENT COORDINATES: Save to file specific file")
 		print("Now the coordinates are really the same")
 		common.write("\t".join(line1_list)+"\n")
@@ -251,7 +252,7 @@ def __main__():
 
 ## This line allows to get many parameters from one option, it might be useful later
 
-	args=parser.parse_args()
+	args = parser.parse_args()
 	
 #	print(args.vcf1)
 #	print(args.sorted1)
@@ -270,13 +271,14 @@ def __main__():
 	## Modify file names
 	outfile1_name = args.vcf1.replace(".vcf","_specific.vcf")
 	outfile2_name = args.vcf2.replace(".vcf","_specific.vcf")
+	outfile_common = "common.vcf"
 	
 	print("Output specific files are:\n{0}\n{1}".format(outfile1_name, outfile2_name))
 	
 	## Open output files
 	f1_spe = open(outfile1_name, "w")
 	f2_spe = open(outfile2_name, "w")
-	common = open("common.vcf", "w")
+	common = open(outfile_common, "w")
 ########################################
 
 
@@ -311,29 +313,26 @@ def __main__():
 			if  vcf1_line[0] == vcf2_line[0]:
 				print("### Line 1 and 2 are on the same chromosome : \n {0} ----- {1}".format(vcf1_line[0], vcf2_line[0]))
 				
-				#############################
-				## Check if the coordinate is the same :: THIS INDENT SECTION MUST BE TURNED TO A FUNCTION !
-				#############################
-				vcf1_line, vcf2_line = find_same_coordinate(vcf1_line, vcf2_line, vcf1, vcf2, common, f1_spe, f2_spe)
 				
-#				if vcf1_line[1] == vcf2_line[1]:
-#					print("### Line 1 and 2 have the same location : \n {0} ----- {1}".format(vcf1_line[1], vcf2_line[1]))
-#					print("\t From SAME COORDINATES: Save to common file (save file 1 at first)")
-#					common.write("\t".join(vcf1_line)+"\n")
-#				else:
-#					vcf1_line, vcf2_line = different_coordinate(vcf1_line, vcf2_line, vcf1, vcf2)
-#					print("\t From DIFFERENT COORDINATES: Save to file specific file")
-#					print("Now the coordinates are really the same")
-#					common.write("\t".join(vcf1_line)+"\n")
-				##############################
+				## Check if the coordinate is the same
+				vcf1_line, vcf2_line = find_same_coordinate(vcf1_line, vcf2_line, vcf1, vcf2, common, f1_spe, f2_spe)
+#DEBUG:
 				
 			else :
+#DEBUG:
 				print("### NOT on the same chromosome : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 				while vcf1_line[0] != vcf2_line[0] :
+#DEBUG:
 					print("\t\tinto the while")
+					
+					## Check if the chromosome is the same && save file-specific lines
 					vcf1_line, vcf2_line = different_chromosome(vcf1_line, vcf2_line, vcf1, vcf2, f1_spe, f2_spe)
-					vcf1_line, vcf2_line = find_same_coordinate(vcf1_line, vcf2_line, vcf1, vcf2, common, f1_spe, f2_spe)		
+					
+					## Check if the coordinates are the same && save file-specific lines & common lines
+					vcf1_line, vcf2_line = find_same_coordinate(vcf1_line, vcf2_line, vcf1, vcf2, common, f1_spe, f2_spe)
+#DEBUG:
 				print("\t\tout of the while")
+#DEBUG:
 				print("\n### After Different chromosmes : \n {0} ----- {1}".format(vcf1_line, vcf2_line))
 			
 
@@ -365,14 +364,17 @@ def __main__():
 		
 		
 		
-		print("\nFinish Program")
+		print("\nProgram Over\n")
 		
 	f1_spe.close()
 	f2_spe.close()
 	common.close()
 
-			
-	
+	print("The common location lines are in: \n\t\t{0}".format(outfile_common))
+	print("The file-specific lines are in: \n\t\t{0} \n\t\t{1}\n".format(outfile1_name, outfile2_name))
+
+
+
 
 if __name__ == "__main__": __main__()
 
