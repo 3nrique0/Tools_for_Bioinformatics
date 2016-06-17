@@ -3,4 +3,4 @@ This are my custom made tools made mostly in python and bash to use them in my b
 If there's a problem making them work or there any comments, please let me know.
 
 Data guide:
-
+input directory
