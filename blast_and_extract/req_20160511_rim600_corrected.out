@@ -1,0 +1,6 @@
+query id, subject id, % identity, alignment length, mismatches, gap opens, q. start, q. end, s. start, s. end, evalue, bit score
+CL432Contig1_HbPR-1	gi|461632731|gb|KB626928.1|	99.68	630	2	0	17	646	20358	19729	0.0	 1153
+SSHE3-04_C10_T7_HbDefesin	gi|461664072|gb|KB618043.1|	95.97	397	16	0	96	492	215370	214800	0.0	  645
+SSHF3-02_D03_T7_Hb_beta_1,3Glucanase	gi|461647759|gb|KB622456.1|	98.47	524	7	1	13	536	9983	10505	0.0	  922
+gi|20135537|gb|AY057860.1|	gi|461668479|gb|KB616792.1|	99.51	409	0	2	1	409	87442	88195	0.0	  743
+
