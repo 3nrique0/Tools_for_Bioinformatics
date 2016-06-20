@@ -89,13 +89,14 @@ def __main__():
 	## To call the the outfile use args.outfile
 	## The files to be treated are in the list args.genotype_files
 
-def strand()
+def strand:
 	'''
 	Find out in which sense the sequence is going.
-	Strand + or strand -
+	Strand + or strand - and creates a fasta record.
+	If the strand is - the reverse complementary sequence is given.
+	
 	In this precise script this info is given in the subject's 
-	protein fasta.
-	The headers contain the genomic coordinates and the strand
+	protein fasta. 
 	'''
 	
 	if coordinates[2] == '-':
@@ -122,6 +123,14 @@ def strand()
 	return = record
 
 
+def startATG ():
+	'''
+	Check if the fasta match of the blastP matches from the first
+	Methionine of the querry. Else the ATG would not be found.
+	--> To avoir problems the blast.out file used must be curated.
+	'''
+	#stupid var to skip errors
+	patae = 2
 
 # 	##########################################
 # 	## START SCRIPT HERE
@@ -147,7 +156,8 @@ def strand()
 	coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
 	coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
 
-
+	##	Find strand and create fasta record,
+	
 	fastaSeq = strand()
 
 	with open(outputHandle, "w") as df:
