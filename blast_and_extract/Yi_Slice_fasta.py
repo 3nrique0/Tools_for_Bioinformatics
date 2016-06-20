@@ -88,7 +88,41 @@ def __main__():
 	## To call the markers use args.marker
 	## To call the the outfile use args.outfile
 	## The files to be treated are in the list args.genotype_files
+
+def strand()
+	'''
+	Find out in which sense the sequence is going.
+	Strand + or strand -
+	In this precise script this info is given in the subject's 
+	protein fasta.
+	The headers contain the genomic coordinates and the strand
+	'''
 	
+	if coordinates[2] == '-':
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]].reverse_complement()),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+
+
+	else:
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]]),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+	
+	return = record
+
+
+
 # 	##########################################
 # 	## START SCRIPT HERE
 # 	## Check if mandatory options are well input
@@ -114,28 +148,10 @@ def __main__():
 	coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
 
 
-	if coordinates[2] == '-':
-
-
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]].reverse_complement()),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
-
-
-	else:
-
-
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]]),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
-
+	fastaSeq = strand()
 
 	with open(outputHandle, "w") as df:
-		SeqIO.write(record, df, "fasta")
+		SeqIO.write(fastaSeq, df, "fasta")
 
+
+if __name__ == "__main__": __main__()
