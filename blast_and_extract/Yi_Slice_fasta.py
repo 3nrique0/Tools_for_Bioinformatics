@@ -8,6 +8,48 @@ import argparse
 
 
 
+
+
+	## To call the markers use args.marker
+	## To call the the outfile use args.outfile
+	## The files to be treated are in the list args.genotype_files
+
+def strand():
+	'''
+	Find out in which sense the sequence is going.
+	Strand + or strand - and creates a fasta record.
+	If the strand is - the reverse complementary sequence is given.
+	
+	In this precise script this info is given in the subject's 
+	protein fasta. 
+	'''
+	
+	if coordinates[2] == '-':
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]].reverse_complement()),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+
+
+	else:
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]]),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+	
+	return = record
+
+
+
+
 def __main__():
 	
 	#################################
@@ -85,52 +127,8 @@ def __main__():
 	
 	args=parser.parse_args()
 
-	## To call the markers use args.marker
-	## To call the the outfile use args.outfile
-	## The files to be treated are in the list args.genotype_files
-
-def strand:
-	'''
-	Find out in which sense the sequence is going.
-	Strand + or strand - and creates a fasta record.
-	If the strand is - the reverse complementary sequence is given.
-	
-	In this precise script this info is given in the subject's 
-	protein fasta. 
-	'''
-	
-	if coordinates[2] == '-':
 
 
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]].reverse_complement()),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
-
-
-	else:
-
-
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]]),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
-	
-	return = record
-
-
-def startATG ():
-	'''
-	Check if the fasta match of the blastP matches from the first
-	Methionine of the querry. Else the ATG would not be found.
-	--> To avoir problems the blast.out file used must be curated.
-	'''
-	#stupid var to skip errors
-	patae = 2
 
 # 	##########################################
 # 	## START SCRIPT HERE
@@ -149,6 +147,7 @@ def startATG ():
 	plusNuc = 2000
 	minusNuc = 2000
 
+
 	##	Slice the description of the
 	prot = recordPep[protId]
 	locus = prot.description[ prot.description.find("locus=") : prot.description.find("length=") - 2 ]
@@ -165,3 +164,4 @@ def startATG ():
 
 
 if __name__ == "__main__": __main__()
+
