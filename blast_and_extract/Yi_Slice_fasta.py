@@ -10,10 +10,6 @@ import argparse
 
 
 
-	## To call the markers use args.marker
-	## To call the the outfile use args.outfile
-	## The files to be treated are in the list args.genotype_files
-
 def strand():
 	'''
 	Find out in which sense the sequence is going.
@@ -23,11 +19,11 @@ def strand():
 	In this precise script this info is given in the subject's 
 	protein fasta. 
 	'''
-	
-	if coordinates[2] == '-':
+	coordinatesVerified
+	if coordinatesVerified[2] == '-':
 
 
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]].reverse_complement()),
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[ coordinatesVerified[0] : coordinatesVerified[1]].reverse_complement()),
 			IUPAC.ambiguous_dna),
 			id = str(protId),
 			name = recordPep[protId].name,
@@ -38,7 +34,7 @@ def strand():
 	else:
 
 
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]:coordinates[1]]),
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[ coordinatesVerified[0] : coordinatesVerified[1] ]),
 			IUPAC.ambiguous_dna),
 			id = str(protId),
 			name = recordPep[protId].name,
@@ -50,10 +46,61 @@ def strand():
 
 
 
+
+def verifyCoordinates():
+	'''
+	Check if the coordinates with the -upStream and +dwStream <int>
+	are into the limits of the size of the scaffold.
+	If they are not, the coordinates will be adjusted to 1 and to the last
+	character of the scaffold.
+	'''
+	##	Work if strand is + or -
+	if coordinates[2] == '-':
+		if (coordinates[1] +args.upStream) > (len(recordGenome[scaff]) - 1) :
+			## Impose max value of the scaffold
+			leftCoord = (len(recordGenome[scaff]) - 1)
+		else:
+			leftCoord = coordinates[1] +args.upStream
+
+		if (coordinates[0] -1 -args.dwStream) < 1 :
+			##	Impose min value of the scaffold
+			rightCoord == 1
+		else:
+			rightCoord == (coordinates[0] -1 -args.dwStream)
+
+
+	if coordinates[2] == '+':
+
+
+		if (coordinates[0] -1 -args.upStream) < 1 :
+			##	Impose min value of the scaffold
+			leftCoord == 1
+		else:
+			leftCoord == (coordinates[0] -1 -args.upStream)
+
+
+		if (coordinates[1] +args.dwStream) > (len(recordGenome[scaff]) - 1) :
+			##	 Impose max value of the scaffold
+			rightCoord == (len(recordGenome[scaff]) - 1)
+		else:
+			rightCoord == (coordinates[1] +args.dwStream)
+
+	return [leftCoord, rightCoord, coordinates[2]]
+
+
+
+
 def __main__():
-	
+
+
 	#################################
-	## Parse arguments
+	##	Declare global variables
+	global args, recordPep, recordGenome, protId, prot, locus, scaff
+	global coordinates, coordinatesVerified
+
+
+	#################################
+	##	Parse arguments
 	parser = argparse.ArgumentParser(description='''
 				Slice a fasta sequence from the results of a blastp
 				And using the "Scaffold + coordinates" name of the 
@@ -105,14 +152,14 @@ def __main__():
 				'''
 				)
 	
-	parser.add_argument("-u", "--upstream", dest = "upLen",
+	parser.add_argument("-u", "--upstream", dest = "upStream",
 				type = int, default = 0, 
 				help = '''
 				<int> Length of the upstream (promoter) sequence
 				'''
 				)
 				
-	parser.add_argument("-d", "--downstream", dest = "dwLen",
+	parser.add_argument("-d", "--downstream", dest = "dwStream",
 				type = int, default = 0, 
 				help = '''
 				<int> Length of the downstream sequence
@@ -124,8 +171,13 @@ def __main__():
 # 				nargs='+', 
 # 				help='''Put your genotype files in the order you want to treat them\n you can add as many files as'''
 # 				)
+	## To call the markers use args.marker
+	## To call the the outfile use args.outfile
+	## The files to be treated are in the list args.genotype_files
 	
+
 	args=parser.parse_args()
+
 
 
 
@@ -141,11 +193,11 @@ def __main__():
 	#recordGenome = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.fas", "fasta")
 	recordGenome = SeqIO.index(args.subjectGenometHandle, "fasta")
 
+
 	##	Assign scaffold that we will work with and lengths for the tests
 	##	This will be looped into the reading of the blast.out
 	protId = "scaffold4727_3605"
-# 	plusNuc = 2000
-# 	minusNuc = 2000
+	
 
 
 	##	Slice the description of the
@@ -155,34 +207,22 @@ def __main__():
 	coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
 	coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
 
+	coordinatesVerified = verifyCoordinates()
+
 	##	Find strand and create fasta record,
-	
-# 	fastaSeq = strand()
-
-	if coordinates[2] == '-':
+	fastaSeq = strand()
 
 
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]-1:coordinates[1]].reverse_complement()),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
 
-
-	else:
-
-
-		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]-1:coordinates[1]]),
-			IUPAC.ambiguous_dna),
-			id = str(protId),
-			name = recordPep[protId].name,
-			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
-			)
+	print(fastaSeq)
+	print("\n##")
+	print("{0} : {1}".format(coordinates[0] -1 -args.upStream, coordinates[1] +args.dwStream))
+		
 
 
 	with open(args.outputHandle, "w") as df:
-		SeqIO.write(record, df, "fasta")
+		SeqIO.write(fastaSeq, df, "fasta")
+
 
 
 if __name__ == "__main__": __main__()
