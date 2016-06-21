@@ -1,0 +1,4 @@
+ascorbate_peroxidase_subfamily_arabidopsis_blastp_on_Reyan.pep_filter_identity50.out:sp|Q05431|APX1_ARATH	scaffold4727_3605	75.22	226	56	0	1	226	1	226	5e-133	  379
+ascorbate_peroxidase_subfamily_arabidopsis_blastp_on_Reyan.pep_filter_identity50.out:sp|Q1PER6|APX2_ARATH	scaffold4727_3605	77.88	226	49	1	2	226	1	226	1e-130	  373
+ascorbate_peroxidase_subfamily_arabidopsis_blastp_on_Reyan.pep_filter_identity50.out:sp|Q42564|APX3_ARATH	scaffold4727_3605	64.09	220	78	1	4	222	6	225	1e-97	  291
+ascorbate_peroxidase_subfamily_arabidopsis_blastp_on_Reyan.pep_filter_identity50.out:sp|Q7XZP5|APX5_ARATH	scaffold4727_3605	58.26	218	89	2	5	220	8	225	1e-85	  259
