@@ -45,7 +45,7 @@ def strand():
 			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
 			)
 	
-	return = record
+	return  record
 
 
 
@@ -137,15 +137,15 @@ def __main__():
 
 	##	Load Fastas:
 	#recordPep = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.pep.fas", "fasta")
-	recordPep = SeqIO.index(subjectProtHandle, "fasta")
+	recordPep = SeqIO.index(args.subjectProtHandle, "fasta")
 	#recordGenome = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.fas", "fasta")
-	recordGenome = SeqIO.index(subjectGenometHandle, "fasta")
+	recordGenome = SeqIO.index(args.subjectGenometHandle, "fasta")
 
 	##	Assign scaffold that we will work with and lengths for the tests
 	##	This will be looped into the reading of the blast.out
 	protId = "scaffold4727_3605"
-	plusNuc = 2000
-	minusNuc = 2000
+# 	plusNuc = 2000
+# 	minusNuc = 2000
 
 
 	##	Slice the description of the
@@ -157,10 +157,32 @@ def __main__():
 
 	##	Find strand and create fasta record,
 	
-	fastaSeq = strand()
+# 	fastaSeq = strand()
 
-	with open(outputHandle, "w") as df:
-		SeqIO.write(fastaSeq, df, "fasta")
+	if coordinates[2] == '-':
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]-1:coordinates[1]].reverse_complement()),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+
+
+	else:
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[coordinates[0]-1:coordinates[1]]),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+
+
+	with open(args.outputHandle, "w") as df:
+		SeqIO.write(record, df, "fasta")
 
 
 if __name__ == "__main__": __main__()
