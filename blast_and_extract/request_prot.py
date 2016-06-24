@@ -12,7 +12,6 @@ path = "/homedir/ortegaabboud/burst/bioinfo_helpdesk/Yi/redox_genes_arabidopsis_
 
 fileList = glob.glob(path+"*.filterout")
 
-print(fileList)
 
 for f in fileList:
 	
@@ -21,7 +20,7 @@ for f in fileList:
 	handle.close()
 	
 	handleOut = open( f.replace(".filterout",".fasta"), "w")
-	print("Gathering fasta sequence for" + f)
+	print("Gathering fasta sequence for:\t" + f)
 	for i in liste:
 		SeqIO.write(recordPep[i.split("\t")[1]], handleOut, "fasta")
 	handleOut.close()
