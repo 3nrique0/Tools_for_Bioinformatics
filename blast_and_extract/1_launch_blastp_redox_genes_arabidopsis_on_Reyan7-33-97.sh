@@ -12,7 +12,7 @@ for f in $FILES;
 do 
 ##	Rename the output file, chancge directory and replace ".fasta" with DBused
 outfile=${f/input/output};
-outfile=${outfile/.fasta/_blastp_on_Reyan.pep.out}
+outfile=${outfile/.fasta/_blastp_on_Reyan_pep.blastout}
 ##	Rename process name for qsub output/error files
 procname=${f%.fasta};
 procname=${procname##*/};

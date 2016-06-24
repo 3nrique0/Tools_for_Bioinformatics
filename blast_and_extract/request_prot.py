@@ -10,13 +10,18 @@ recordPep = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.pep.fas", "
 
 path = "/homedir/ortegaabboud/burst/bioinfo_helpdesk/Yi/redox_genes_arabidopsis_20160614/output/"
 
-for f in flieList:
+fileList = glob.glob(path+"*.filterout")
+
+print(fileList)
+
+for f in fileList:
 	
-	handle = open(path + f, "r")
+	handle = open( f, "r")
 	liste = handle.readlines()
 	handle.close()
 	
-	handleOut = open(path + f.replace(".out",".fasta"), "w")
+	handleOut = open( f.replace(".filterout",".fasta"), "w")
+	print("Gathering fasta sequence for" + f)
 	for i in liste:
 		SeqIO.write(recordPep[i.split("\t")[1]], handleOut, "fasta")
 	handleOut.close()
