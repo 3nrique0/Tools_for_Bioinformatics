@@ -47,7 +47,7 @@ def strand():
 
 
 
-def verifyCoordinates():
+def verifyCoordinatesforBlastOutput():
 	'''
 	Check if the coordinates with the -upStream and +dwStream <int>
 	are into the limits of the size of the scaffold.
@@ -64,9 +64,9 @@ def verifyCoordinates():
 
 		if (coordinates[0] -1 -args.dwStream) < 1 :
 			##	Impose min value of the scaffold
-			rightCoord == 1
+			rightCoord = 1
 		else:
-			rightCoord == (coordinates[0] -1 -args.dwStream)
+			rightCoord = (coordinates[0] -1 -args.dwStream)
 
 
 	if coordinates[2] == '+':
@@ -87,6 +87,31 @@ def verifyCoordinates():
 
 	return [leftCoord, rightCoord, coordinates[2]]
 
+
+
+def verifyCoordinates():
+	'''
+	Verify that coordinates on the format [star, end, strand]
+	don't have coordinates outside the scaffold where they belong
+	when the user wants to have upstream and downstream sequences.
+
+	This is format of writting coordinates is close to that of a GFF file
+	'''
+
+	if (coordinates[0] -1 -args.upStream) < 1 :
+		##	Impose min value of the scaffold
+		leftCoord = 1
+	else:
+		leftCoord = (coordinates[0] -1 -args.upStream)
+
+
+	if (coordinates[1] +args.dwStream) > (len(recordGenome[scaff]) - 1) :
+		##	 Impose max value of the scaffold
+		rightCoord = (len(recordGenome[scaff]) - 1)
+	else:
+		rightCoord = (coordinates[1] +args.dwStream)
+
+	return [leftCoord, rightCoord, coordinates[2]]
 
 
 
@@ -216,7 +241,7 @@ def __main__():
 
 	print(fastaSeq)
 	print("\n##")
-	print("{0} : {1}".format(coordinates[0] -1 -args.upStream, coordinates[1] +args.dwStream))
+	print("Sequence extracted from {0} to {1} in the strand {2}".format(coordinatesVerified[0], coordinatesVerified[1], coordinatesVerified[2]))
 		
 
 
