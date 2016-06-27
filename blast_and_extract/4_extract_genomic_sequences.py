@@ -8,6 +8,18 @@ import pandas as pd
 import argparse
 
 
+def importBlastOutput():
+	'''
+	Import Blast output using pandas read_csv.
+	Pandas dataframe will used to make a list from the subject's id
+	This funcion outputs a list to be parsed
+	'''
+	blastResult = pd.read_csv(args.blastHandle, sep = '\t', header = None)
+
+	subjectList = list(set(blastResult[1]))
+	
+	return subjectList
+
 
 
 
@@ -55,7 +67,7 @@ def strand():
 ##	The input are s.start and s.end
 ##	If s.start < s.end, strand = +
 ##	if s.end < s.start, strand = -
-def verifyCoordinatesFromBlastOutput():
+def verifyCoordinates():
 	'''
 	Check if the coordinates with the -upStream and +dwStream <int>
 	are into the limits of the size of the scaffold.
@@ -66,23 +78,23 @@ def verifyCoordinatesFromBlastOutput():
 	if coordinates[2] == '-':
 		if (coordinates[1] +args.upStream) > (len(recordGenome[scaff]) - 1) :
 			## Impose max value of the scaffold
-			leftCoord = (len(recordGenome[scaff]) - 1)
+			rightCoord = (len(recordGenome[scaff]) - 1)
 		else:
-			leftCoord = coordinates[1] +args.upStream
+			rightCoord = coordinates[1] +args.upStream
 
-		if (coordinates[0] -1 -args.dwStream) < 1 :
+		if (coordinates[0] -1 -args.dwStream) < 0 :
 			##	Impose min value of the scaffold
-			rightCoord = 1
+			leftCoord = 0
 		else:
-			rightCoord = (coordinates[0] -1 -args.dwStream)
+			leftCoord = (coordinates[0] -1 -args.dwStream)
 
 
 	if coordinates[2] == '+':
 
 
-		if (coordinates[0] -1 -args.upStream) < 1 :
+		if (coordinates[0] -1 -args.upStream) < 0 :
 			##	Impose min value of the scaffold
-			leftCoord = 1
+			leftCoord = 0
 		else:
 			leftCoord = (coordinates[0] -1 -args.upStream)
 
@@ -97,7 +109,7 @@ def verifyCoordinatesFromBlastOutput():
 
 
 
-def verifyCoordinates():
+def verifyCoordinatesTest():
 	'''
 	Verify that coordinates on the format [star, end, strand]
 	don't have coordinates outside the scaffold where they belong
@@ -128,7 +140,7 @@ def __main__():
 
 	#################################
 	##	Declare global variables
-	global args, recordPep, recordGenome, protId, prot, locus, scaff
+	global args, recordPep, recordGenome, protId, protIdList, prot, locus, scaff
 	global coordinates, coordinatesVerified
 
 
@@ -232,34 +244,43 @@ def __main__():
 
 	##	Assign scaffold that we will work with and lengths for the tests
 	##	This will be looped into the reading of the blast.out
-	protId = "scaffold4727_3605"
-	
+	# protId = "scaffold4727_3605"
+	protIdList = importBlastOutput() 
 
+	##	Empty output file
+	with open(args.outputHandle, "w") as df:
+		pass
 
-	##	Slice the description of the
-	prot = recordPep[protId]
-	locus = prot.description[ prot.description.find("locus=") : prot.description.find("length=") - 2 ]
-	scaff = locus[ locus.find("=") + 1 : locus.find("(") ]
-	coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
-	coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
+	##	Parse the list of protein ID
+	for i in protIdList:
 
-	coordinatesVerified = verifyCoordinates()
-
-	##	Find strand and create fasta record,
-	fastaSeq = strand()
-
-
-
-	print(fastaSeq)
-	print("\n##")
-	print("Sequence extracted from {0} to {1} in the strand {2}".format(coordinatesVerified[0], coordinatesVerified[1], coordinatesVerified[2]))
+		protId = i
 		
 
+		##	Slice the description of the
+		prot = recordPep[protId]
+		locus = prot.description[ prot.description.find("locus=") : prot.description.find("length=") - 2 ]
+		scaff = locus[ locus.find("=") + 1 : locus.find("(") ]
+		coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
+		coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
+	
+		coordinatesVerified = verifyCoordinates()
+	
+		##	Find strand and create fasta record,
+		fastaSeq = strand()
+	
+	
+	
+		print(fastaSeq)
+		print("Sequence extracted from {0} to {1} in the strand {2}".format(coordinatesVerified[0], coordinatesVerified[1], coordinatesVerified[2]))
+			
+	
+	
+		with open(args.outputHandle, "a") as df:
+			SeqIO.write(fastaSeq, df, "fasta")
 
-	with open(args.outputHandle, "w") as df:
-		SeqIO.write(fastaSeq, df, "fasta")
-
-
+			
+		print("########")
 
 if __name__ == "__main__": __main__()
 
