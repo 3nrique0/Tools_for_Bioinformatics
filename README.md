@@ -16,3 +16,11 @@ Data/Input/blast_corrected.out
 
 ########
 
+BLAST_AND_EXTRACT
+
+Example usage of commands, :
+
+4_extract_genomic_sequences.py Allows to slice a genomic fasta sequence depending on the coordinates which have been given to it. 
+
+python 4_extract_genomic_sequences.py -p /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_peptide.fasta -g /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_scaffold.fasta -o /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_output/output.fasta
+

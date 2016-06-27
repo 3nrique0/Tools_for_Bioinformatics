@@ -74,16 +74,16 @@ def verifyCoordinates():
 
 		if (coordinates[0] -1 -args.upStream) < 1 :
 			##	Impose min value of the scaffold
-			leftCoord == 1
+			leftCoord = 1
 		else:
-			leftCoord == (coordinates[0] -1 -args.upStream)
+			leftCoord = (coordinates[0] -1 -args.upStream)
 
 
 		if (coordinates[1] +args.dwStream) > (len(recordGenome[scaff]) - 1) :
 			##	 Impose max value of the scaffold
-			rightCoord == (len(recordGenome[scaff]) - 1)
+			rightCoord = (len(recordGenome[scaff]) - 1)
 		else:
-			rightCoord == (coordinates[1] +args.dwStream)
+			rightCoord = (coordinates[1] +args.dwStream)
 
 	return [leftCoord, rightCoord, coordinates[2]]
 
