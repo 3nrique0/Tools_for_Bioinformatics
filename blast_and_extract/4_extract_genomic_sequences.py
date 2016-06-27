@@ -4,6 +4,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
+import pandas as pd
 import argparse
 
 
@@ -157,7 +158,6 @@ def __main__():
 				'''
 				)
 				
-	##	Soon to be used
 	parser.add_argument("-b", "--blast", dest = "blastHandle",
 				type = str, default = None, 
 				help = '''
@@ -225,6 +225,10 @@ def __main__():
 	#recordGenome = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.fas", "fasta")
 	recordGenome = SeqIO.index(args.subjectGenometHandle, "fasta")
 
+	##	Load Blast result:
+	blastResult = pd.read_csv(args.blastHandle, sep = '\t', header = None)
+
+	
 
 	##	Assign scaffold that we will work with and lengths for the tests
 	##	This will be looped into the reading of the blast.out
