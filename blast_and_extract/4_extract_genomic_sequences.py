@@ -19,7 +19,10 @@ def strand():
 	In this precise script this info is given in the subject's 
 	protein fasta. 
 	'''
-	coordinatesVerified
+#	print("---------")
+#	coordinatesVerified
+#	print("---------")
+
 	if coordinatesVerified[2] == '-':
 
 
@@ -46,8 +49,12 @@ def strand():
 
 
 
-
-def verifyCoordinatesforBlastOutput():
+#####
+##	Find which strand of the blast match on the subject (reference)
+##	The input are s.start and s.end
+##	If s.start < s.end, strand = +
+##	if s.end < s.start, strand = -
+def verifyCoordinatesFromBlastOutput():
 	'''
 	Check if the coordinates with the -upStream and +dwStream <int>
 	are into the limits of the size of the scaffold.
