@@ -1,7 +1,5 @@
 #! /usr/local/bioinfo/python/3.4.3_build2/bin/python
 
-import sys
-import pandas as pd
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -10,22 +8,124 @@ import argparse
 
 
 
+
+
+def strand():
+	'''
+	Find out in which sense the sequence is going.
+	Strand + or strand - and creates a fasta record.
+	If the strand is - the reverse complementary sequence is given.
+	
+	In this precise script this info is given in the subject's 
+	protein fasta. 
+	'''
+	coordinatesVerified
+	if coordinatesVerified[2] == '-':
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[ coordinatesVerified[0] : coordinatesVerified[1]].reverse_complement()),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+
+
+	else:
+
+
+		record = SeqRecord(Seq(str(recordGenome[scaff].seq[ coordinatesVerified[0] : coordinatesVerified[1] ]),
+			IUPAC.ambiguous_dna),
+			id = str(protId),
+			name = recordPep[protId].name,
+			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
+			)
+	
+	return  record
+
+
+
+
+
+def verifyCoordinates():
+	'''
+	Check if the coordinates with the -upStream and +dwStream <int>
+	are into the limits of the size of the scaffold.
+	If they are not, the coordinates will be adjusted to 1 and to the last
+	character of the scaffold.
+	'''
+	##	Work if strand is + or -
+	if coordinates[2] == '-':
+		if (coordinates[1] +args.upStream) > (len(recordGenome[scaff]) - 1) :
+			## Impose max value of the scaffold
+			leftCoord = (len(recordGenome[scaff]) - 1)
+		else:
+			leftCoord = coordinates[1] +args.upStream
+
+		if (coordinates[0] -1 -args.dwStream) < 1 :
+			##	Impose min value of the scaffold
+			rightCoord == 1
+		else:
+			rightCoord == (coordinates[0] -1 -args.dwStream)
+
+
+	if coordinates[2] == '+':
+
+
+		if (coordinates[0] -1 -args.upStream) < 1 :
+			##	Impose min value of the scaffold
+			leftCoord == 1
+		else:
+			leftCoord == (coordinates[0] -1 -args.upStream)
+
+
+		if (coordinates[1] +args.dwStream) > (len(recordGenome[scaff]) - 1) :
+			##	 Impose max value of the scaffold
+			rightCoord == (len(recordGenome[scaff]) - 1)
+		else:
+			rightCoord == (coordinates[1] +args.dwStream)
+
+	return [leftCoord, rightCoord, coordinates[2]]
+
+
+
+
 def __main__():
 
+
 	#################################
-	## Parse arguments
+	##	Declare global variables
+	global args, recordPep, recordGenome, protId, prot, locus, scaff
+	global coordinates, coordinatesVerified
+
+
+	#################################
+	##	Parse arguments
 	parser = argparse.ArgumentParser(description='''
-				Slice a fasta sequence from the results of a blast
+				Slice a fasta sequence from the results of a blastp
+				And using the "Scaffold + coordinates" name of the 
+				protein to obtain the genomic fasta sequence + and 
+				- some extra nucleotides determined by the user'
 				''')
 	
-	parser.add_argument("-s", "--subject", dest = "subjectHandle",
+	parser.add_argument("-p", "--subjectProt", dest = "subjectProtHandle",
 				type = str, default = None, 
 				help = '''
 				<str> File containing reference (subject) fasta sequence.
-				File must be in fasta format
+				File must be in fasta format. In this particular case it
+				is a protein fasta file.
 				'''
 				)
-	
+				
+	parser.add_argument("-g", "--subjectGenome", dest = "subjectGenometHandle",
+				type = str, default = None, 
+				help = '''
+				<str> File containing reference (subject) genome fasta 
+				sequence.
+				'''
+				)
+				
+	##	Soon to be used
 	parser.add_argument("-b", "--blast", dest = "blastHandle",
 				type = str, default = None, 
 				help = '''
@@ -34,6 +134,7 @@ def __main__():
 				'''
 				)
 
+	##	Unused
 	parser.add_argument("-q", "--query", dest = "queryFastaHandle",
 				type = str, default = None, 
 				help = '''
@@ -42,7 +143,7 @@ def __main__():
 				used in the blast
 				'''
 				)
-
+	
 	parser.add_argument("-o", "--output", dest = "outputHandle",
 				type = str, default = "output.fasta", 
 				help = '''
@@ -51,109 +152,76 @@ def __main__():
 				'''
 				)
 	
-	parser.add_argument("-p", "--promoter", dest = "promLen",
-				type = int, default = 2000, 
+	parser.add_argument("-u", "--upstream", dest = "upStream",
+				type = int, default = 0, 
 				help = '''
-				<str> Name of output fasta file 
-				defaut= "output.fasta"
+				<int> Length of the upstream (promoter) sequence
 				'''
 				)
+				
+	parser.add_argument("-d", "--downstream", dest = "dwStream",
+				type = int, default = 0, 
+				help = '''
+				<int> Length of the downstream sequence
+				'''
+				)
+								
 # 	parser.add_argument("-f", "--files", metavar="files",
 # 				type=str, default=None, 
 # 				nargs='+', 
 # 				help='''Put your genotype files in the order you want to treat them\n you can add as many files as'''
 # 				)
-	
-	args=parser.parse_args()
-
 	## To call the markers use args.marker
 	## To call the the outfile use args.outfile
 	## The files to be treated are in the list args.genotype_files
 	
+
+	args=parser.parse_args()
+
+
+
+
+
 # 	##########################################
-# 	
 # 	## START SCRIPT HERE
 # 	## Check if mandatory options are well input
 
-	# to be done
+
+	##	Load Fastas:
+	#recordPep = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.pep.fas", "fasta")
+	recordPep = SeqIO.index(args.subjectProtHandle, "fasta")
+	#recordGenome = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.fas", "fasta")
+	recordGenome = SeqIO.index(args.subjectGenometHandle, "fasta")
 
 
-	## IMPORT BLAST DATA, CREATE STRAND COLUMN
-
-	blastHeader = ['qId','sId','identity','alignmentLength','mismatches','gapOpens','qStart','qEnd','sStart','sEnd','evalue','bitScore']
+	##	Assign scaffold that we will work with and lengths for the tests
+	##	This will be looped into the reading of the blast.out
+	protId = "scaffold4727_3605"
 	
-	blastResult = pd.read_csv(args.blastHandle, sep="\t", header=0, names=blastHeader)
-
-	blastResult['codingStrand'] = blastResult['sStart'] < blastResult['sEnd']	
 
 
-	## IMPORT FASTA FROM SUBJECT
-	subjectIndex = SeqIO.index(args.subjectHandle, "fasta")
+	##	Slice the description of the
+	prot = recordPep[protId]
+	locus = prot.description[ prot.description.find("locus=") : prot.description.find("length=") - 2 ]
+	scaff = locus[ locus.find("=") + 1 : locus.find("(") ]
+	coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
+	coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
+
+	coordinatesVerified = verifyCoordinates()
+
+	##	Find strand and create fasta record,
+	fastaSeq = strand()
 
 
-	#####################################
-	#####################################
 
-	#### Scripting for single use @ RIM600
-	outHandle = open(args.outputHandle, "w")
-	outHandle.close()
-
-
-	## HAND MADE DATA.FRAME TO PARSE DATA
-
-	### BLAST RESULT WITH RIM600
-# 	subjectListe = ['gi|461632731|gb|KB626928.1|','gi|461664072|gb|KB618043.1|','gi|461647759|gb|KB622456.1|','gi|461668479|gb|KB616792.1|']
-# 	queryListe = ['CL432Contig1_HbPR-1', 'SSHE3-04_C10_T7_HbDefesin', 'SSHF3-02_D03_T7_Hb_beta_1,3Glucanase', 'gi|20135537|gb|AY057860.1|']
-# 	startCoord = [19729, 214800, 9983, 87442]
-# 	strand = ["-", "-", "+", "+"]
-
-
-	subjectListe = ["gi|461632731|gb|KB626928.1|", "gi|461664072|gb|KB618043.1|", "gi|461647759|gb|KB622456.1|", "gi|461668479|gb|KB616792.1|"]
-	queryListe = ["CL432Contig1_HbPR-1", "SSHE3-04_C10_T7_HbDefesin", "SSHF3-02_D03_T7_Hbβ1,3Glucanase", "gi|20135537|gb|AY057860.1|"]
-	startCoord = [20358, 215368, 9983, 87442]
-	strand = ["-", "-", "+", "+"]
-
-	for i in range(0,len(subjectListe)):
-		
-		## PRINT FOR TEST
-		print("\n###")
-		print(i, subjectListe[i], queryListe[i],  startCoord[i], strand[i])
-		print("\n")
-		print(subjectIndex[subjectListe[i]])
-		print("\n")
-		print(subjectIndex[subjectListe[i]].seq[0:20])
-		print(subjectIndex[subjectListe[i]].seq[0:20].reverse_complement())
-		print(type(subjectIndex[subjectListe[i]].seq[0:20]))
+	print(fastaSeq)
+	print("\n##")
+	print("{0} : {1}".format(coordinates[0] -1 -args.upStream, coordinates[1] +args.dwStream))
 		
 
-		## IN CASE OF NEGATIVE SRAND
-		if strand[i] == '-':
 
-
-			record = SeqRecord(Seq(str(subjectIndex[subjectListe[i]].seq[startCoord[i]-args.promLen:startCoord[i]].reverse_complement()),
-					IUPAC.ambiguous_dna),
-					id = "prom-" + str(queryListe[i]),
-					name="promoter_" + str(queryListe[i]),
-					description="fragment from {0} ({1}:{2}) | Strand {3}".format(subjectListe[i], startCoord[i] - 2000, startCoord[i], strand[i]))
-
-	
-		## IN CASE OF POSITIVE STRAND
-		else:
-			record = SeqRecord(Seq(str(subjectIndex[subjectListe[i]].seq[startCoord[i]-args.promLen:startCoord[i]]),
-					IUPAC.ambiguous_dna),
-					id = "prom-" + str(queryListe[i]),
-					name="promoter_" + str(queryListe[i]),
-					description= "fragment from {0} ({1}:{2}) | Strand {3}".format(subjectListe[i], startCoord[i] - 2000, startCoord[i], strand[i])
-					)
-
-
-		print("\n")
-		print(record)
-		
-		## SAVE SEQUENCE TO FILE
-		outHandle = open(args.outputHandle, "a")
-		SeqIO.write(record, outHandle, "fasta")
-		outHandle.close()
+	with open(args.outputHandle, "w") as df:
+		SeqIO.write(fastaSeq, df, "fasta")
 
 
 
