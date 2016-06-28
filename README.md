@@ -25,8 +25,15 @@ Example usage of commands, :
 Set your cwd to Tools_for_Bioinformatics/blast_and_extract/
 
 Run at cluster
-python 4_extract_genomic_sequences.py -p ../Data/fasta_input/blast_extract_subject_peptide.fasta -g ../Data/fasta_input/blast_extract_subject_scaffold.fasta -o ../Data/fasta_output/output.fasta -u 20 -d 10
+
+./4_extract_genomic_sequences.py -p /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_peptide.fasta -g /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_scaffold.fasta -b /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/blast_output/blast_extract_blast.out -o /homedir/ortegaabboud/burst/test/gitstuff/Tools_for_Bioinformatics/Data/fasta_output/output.fasta -u 20 -d 10
+
 
 Run at home
 python3.4 4_extract_genomic_sequences.py -p /media/enrique/Turing/Documents/testGit/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_peptide.fasta -g /media/enrique/Turing/Documents/testGit/Tools_for_Bioinformatics/Data/fasta_input/blast_extract_subject_scaffold.fasta -b /media/enrique/Turing/Documents/testGit/Tools_for_Bioinformatics/Data/blast_output/blast_extract_blast.out
 
+
+First serious run:
+
+There is a problem with the output, the size of the fasta is weird. I'll check out the detail after making run the full set of programs with -2000 and +2000 nucleotides
+./4_extract_genomic_sequences.py -p /NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.pep.fas -g /NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.fas -b /homedir/ortegaabboud/burst/bioinfo_helpdesk/Yi/redox_genes_arabidopsis_20160614/output/4-hydroxyphenylpyruvate_dioxygenase_blastp_on_Reyan_pep_identity50.filterout -o /homedir/ortegaabboud/burst/bioinfo_helpdesk/Yi/redox_genes_arabidopsis_20160614/output/4-hydroxyphenylpyruvate_dioxygenase_blastp_on_Reyan_pep_identity50.genomic.fasta

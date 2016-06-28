@@ -19,7 +19,7 @@ for f in fileList:
 	liste = handle.readlines()
 	handle.close()
 	
-	handleOut = open( f.replace(".filterout",".fasta"), "w")
+	handleOut = open( f.replace(".filterout",".pep.fasta"), "w")
 	print("Gathering fasta sequence for:\t" + f)
 	for i in liste:
 		SeqIO.write(recordPep[i.split("\t")[1]], handleOut, "fasta")
