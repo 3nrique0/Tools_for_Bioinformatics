@@ -6,6 +6,12 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 import glob
+import argparse
+
+
+parser= argparse.ArgumentParser(description="Gather fasta sequences from the matching results of a blast.")
+
+parser.add_argument('--foo', help="foo help", )
 
 
 recordPep = SeqIO.index("/NAS/NGS/Hevea/Genome/Reyan7-33-97/Hbgenome.pep.fas", "fasta")
