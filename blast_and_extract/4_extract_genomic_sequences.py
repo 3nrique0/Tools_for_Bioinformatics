@@ -14,11 +14,38 @@ def importBlastOutput():
 	Pandas dataframe will used to make a list from the subject's id
 	This funcion outputs a list to be parsed
 	'''
+
+	##	 Import the blast output as a pandas dataframe
 	blastResult = pd.read_csv(args.blastHandle, sep = '\t', header = None)
 
+	##	Create a non redundant list of subject names (scaffolds)
 	subjectList = list(set(blastResult[1]))
 
 	return subjectList
+
+
+
+
+def maskGE(df, key, value):
+	'''
+	Filter data from a pandas dataframe Greater or Equal to value
+	df = DataFrame
+	key = column key, if no names, <int> for the column
+	value = minimum value to be accepted
+	Source =  http://stackoverflow.com/questions/11869910/pandas-filter-rows-of-dataframe-with-operator-chaining
+	'''
+	return df[df[key] >= value]
+
+
+
+def maskLE(df, key, value):
+	'''
+	Filter data from a pandas dataframe Less or Equal to value
+	df = DataFrame
+	key = column key, if no names, <int> for the column
+	value = minimum value to be accepted
+	'''
+	return df[df[key] <= value]
 
 
 
