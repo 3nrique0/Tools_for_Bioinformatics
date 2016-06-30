@@ -17,7 +17,7 @@ def importBlastOutput():
 	blastResult = pd.read_csv(args.blastHandle, sep = '\t', header = None)
 
 	subjectList = list(set(blastResult[1]))
-	
+
 	return subjectList
 
 
@@ -28,9 +28,9 @@ def strand():
 	Find out in which sense the sequence is going.
 	Strand + or strand - and creates a fasta record.
 	If the strand is - the reverse complementary sequence is given.
-	
-	In this precise script this info is given in the subject's 
-	protein fasta. 
+
+	In this precise script this info is given in the subject's
+	protein fasta.
 	'''
 #	print("---------")
 #	coordinatesVerified
@@ -56,7 +56,7 @@ def strand():
 			name = recordPep[protId].name,
 			description = str(recordPep[protId].description )#+ " extrasequence=({0},{1})".format(plusNuc, minusNuc))
 			)
-	
+
 	return  record
 
 
@@ -148,30 +148,30 @@ def __main__():
 	##	Parse arguments
 	parser = argparse.ArgumentParser(description='''
 				Slice a fasta sequence from the results of a blastp
-				And using the "Scaffold + coordinates" name of the 
-				protein to obtain the genomic fasta sequence + and 
+				And using the "Scaffold + coordinates" name of the
+				protein to obtain the genomic fasta sequence + and
 				- some extra nucleotides determined by the user'
 				''')
-	
+
 	parser.add_argument("-p", "--subjectProt", dest = "subjectProtHandle",
-				type = str, default = None, 
+				type = str, default = None,
 				help = '''
 				<str> File containing reference (subject) fasta sequence.
 				File must be in fasta format. In this particular case it
 				is a protein fasta file.
 				'''
 				)
-				
+
 	parser.add_argument("-g", "--subjectGenome", dest = "subjectGenometHandle",
-				type = str, default = None, 
+				type = str, default = None,
 				help = '''
-				<str> File containing reference (subject) genome fasta 
+				<str> File containing reference (subject) genome fasta
 				sequence.
 				'''
 				)
-				
+
 	parser.add_argument("-b", "--blast", dest = "blastHandle",
-				type = str, default = None, 
+				type = str, default = None,
 				help = '''
 				<str> File containing result from blast.
 				Format must be tsv, no headers.
@@ -179,46 +179,46 @@ def __main__():
 				)
 
 	##	Unused
-	parser.add_argument("-q", "--query", dest = "queryFastaHandle",
-				type = str, default = None, 
-				help = '''
-				<str> File containing fasta sequences.
-				It's the same containign the query sequences
-				used in the blast
-				'''
-				)
-	
+	# parser.add_argument("-q", "--query", dest = "queryFastaHandle",
+	# 			type = str, default = None,
+	# 			help = '''
+	# 			<str> File containing fasta sequences.
+	# 			It's the same containign the query sequences
+	# 			used in the blast
+	# 			'''
+	# 			)
+
 	parser.add_argument("-o", "--output", dest = "outputHandle",
-				type = str, default = "output.fasta", 
+				type = str, default = "output.fasta",
 				help = '''
-				<str> Name of output fasta file 
+				<str> Name of output fasta file
 				defaut= "output.fasta"
 				'''
 				)
-	
+
 	parser.add_argument("-u", "--upstream", dest = "upStream",
-				type = int, default = 0, 
+				type = int, default = 0,
 				help = '''
 				<int> Length of the upstream (promoter) sequence
 				'''
 				)
-				
+
 	parser.add_argument("-d", "--downstream", dest = "dwStream",
-				type = int, default = 0, 
+				type = int, default = 0,
 				help = '''
 				<int> Length of the downstream sequence
 				'''
 				)
-								
+
 # 	parser.add_argument("-f", "--files", metavar="files",
-# 				type=str, default=None, 
-# 				nargs='+', 
+# 				type=str, default=None,
+# 				nargs='+',
 # 				help='''Put your genotype files in the order you want to treat them\n you can add as many files as'''
 # 				)
 	## To call the markers use args.marker
 	## To call the the outfile use args.outfile
 	## The files to be treated are in the list args.genotype_files
-	
+
 
 	args=parser.parse_args()
 
@@ -240,12 +240,12 @@ def __main__():
 	##	Load Blast result:
 	blastResult = pd.read_csv(args.blastHandle, sep = '\t', header = None)
 
-	
+
 
 	##	Assign scaffold that we will work with and lengths for the tests
 	##	This will be looped into the reading of the blast.out
 	# protId = "scaffold4727_3605"
-	protIdList = importBlastOutput() 
+	protIdList = importBlastOutput()
 
 	##	Empty output file
 	with open(args.outputHandle, "w") as df:
@@ -255,7 +255,7 @@ def __main__():
 	for i in protIdList:
 
 		protId = i
-		
+
 
 		##	Slice the description of the
 		prot = recordPep[protId]
@@ -263,24 +263,23 @@ def __main__():
 		scaff = locus[ locus.find("=") + 1 : locus.find("(") ]
 		coordinates = locus[ locus.find("(") + 1 : locus.find(")") ].split(",")
 		coordinates[0], coordinates[1] = int(coordinates[0]), int(coordinates[1])
-	
+
 		coordinatesVerified = verifyCoordinates()
-	
+
 		##	Find strand and create fasta record,
 		fastaSeq = strand()
-	
-	
-	
-		print(fastaSeq)
-		print("Sequence extracted from {0} to {1} in the strand {2}".format(coordinatesVerified[0], coordinatesVerified[1], coordinatesVerified[2]))
-			
-	
-	
+
+
+
+# 		print(fastaSeq)
+# 		print("Sequence extracted from {0} to {1} in the strand {2}".format(coordinatesVerified[0], coordinatesVerified[1], coordinatesVerified[2]))
+
+
+
 		with open(args.outputHandle, "a") as df:
 			SeqIO.write(fastaSeq, df, "fasta")
 
-			
-		print("########")
+
+# 		print("########")
 
 if __name__ == "__main__": __main__()
-
