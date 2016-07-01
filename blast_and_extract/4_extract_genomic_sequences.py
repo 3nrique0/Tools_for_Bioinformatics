@@ -21,7 +21,11 @@ def importBlastOutput():
 	##	Create a non redundant list of subject names (scaffolds)
 	subjectList = list(set(blastResult[1]))
 
-	if
+	if args.filterParameters == []:
+		print("No filtering arguments for blast")
+	else:
+		### Create tuples with the key,values
+		blastResult = filterBlastOut(blastResult, key, value)
 
 	return subjectList
 
@@ -50,9 +54,12 @@ def maskLE(df, key, value):
 	return df[df[key] <= value]
 
 
-def filerBlastOut():
+def filerBlastOut(df, key, value):
 	'''
 	'''
+	return df[df[key] >= value]
+
+
 
 def strand():
 	'''
@@ -210,15 +217,6 @@ def __main__():
 				)
 
 
-	# parser.add_argument("-q", "--query", dest = "queryFastaHandle",
-	# 			type = str, default = None,
-	# 			help = '''
-	# 			<str> File containing fasta sequences.
-	# 			It's the same containign the query sequences
-	# 			used in the blast
-	# 			'''
-	# 			)
-
 	parser.add_argument("-o", "--output", dest = "outputHandle",
 				type = str, default = "output.fasta",
 				help = '''
@@ -241,7 +239,7 @@ def __main__():
 				'''
 				)
 
-	parser.add_argument("-bf", "--BlastFilters", metavar="filterParametters",
+	parser.add_argument("-bf", "--BlastFilters", metavar="filterParameters",
 				type=str, default=None,
 				nargs='+',
 				help='''Add 2 by 2 the column key (zero-based) followed by the value\n
