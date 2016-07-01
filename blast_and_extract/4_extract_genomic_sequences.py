@@ -21,6 +21,8 @@ def importBlastOutput():
 	##	Create a non redundant list of subject names (scaffolds)
 	subjectList = list(set(blastResult[1]))
 
+	if
+
 	return subjectList
 
 
@@ -48,7 +50,9 @@ def maskLE(df, key, value):
 	return df[df[key] <= value]
 
 
-
+def filerBlastOut():
+	'''
+	'''
 
 def strand():
 	'''
@@ -205,7 +209,7 @@ def __main__():
 				'''
 				)
 
-	##	Unused
+
 	# parser.add_argument("-q", "--query", dest = "queryFastaHandle",
 	# 			type = str, default = None,
 	# 			help = '''
@@ -237,11 +241,15 @@ def __main__():
 				'''
 				)
 
-# 	parser.add_argument("-f", "--files", metavar="files",
-# 				type=str, default=None,
-# 				nargs='+',
-# 				help='''Put your genotype files in the order you want to treat them\n you can add as many files as'''
-# 				)
+	parser.add_argument("-bf", "--BlastFilters", metavar="filterParametters",
+				type=str, default=None,
+				nargs='+',
+				help='''Add 2 by 2 the column key (zero-based) followed by the value\n
+						Common column keys (blast outfmt 6 and 7)\n
+						\tidentity\t2\n
+						\te-value\t10\n
+						\tscore\t11\n'''
+				)
 	## To call the markers use args.marker
 	## To call the the outfile use args.outfile
 	## The files to be treated are in the list args.genotype_files
