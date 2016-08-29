@@ -67,23 +67,43 @@ print("N requested: {0}".format(args.n))
 ###########################
 
 ## CALCULATE TOTAL SIZE OF GENOME
+
 genomeSize = 0
+dico = {} 
 for i in sorted(fastaIndex.keys()):
 	genomeSize = genomeSize + len(fastaIndex[i])
+	dico[i] = len(fastaIndex[i])
+
+## SORT DICO BY KEY IN CASE THE FASTA HEADERS DON'T FOLLOW SCAFFOLD SIZE
+## It's a list of tuples ordered from smallest to biggest value from dico
+dicoSort = sorted(dico.items(), key=lambda x: x[1])
 
 var =  0
 percentil = args.n/100.
 
-for i in reversed(sorted(fastaIndex.keys())):
-	var = var + len(fastaIndex[i])
+for i in dicoSort:
+	var = var + i[1]
 	if var >= genomeSize * percentil:
-		scaff = i
-		scaffLen = len(fastaIndex[i])
+		scaff = i[0]
+		scaffLen = i[1]
 		print("Genome Size: {0}".format(genomeSize))
 		print("var={0}; 50%g={1}".format(var, genomeSize * percentil))
-		print("Scaffold containing the requested percentil: {0}".format(i))
-		print("N{0}: {1}".format(args.n, len(fastaIndex[i])))
+		print("Scaffold containing the requested percentil: {0}".format(i[0]))
+		print("N{0}: {1}".format(args.n, i[1]))
 		break
+
+
+## loop for organised genomes
+# for i in reversed(sorted(fastaIndex.keys())):
+# 	var = var + len(fastaIndex[i])
+# 	if var >= genomeSize * percentil:
+# 		scaff = i
+# 		scaffLen = len(fastaIndex[i])
+# 		print("Genome Size: {0}".format(genomeSize))
+# 		print("var={0}; 50%g={1}".format(var, genomeSize * percentil))
+# 		print("Scaffold containing the requested percentil: {0}".format(i))
+# 		print("N{0}: {1}".format(args.n, len(fastaIndex[i])))
+# 		break
 
 
 
