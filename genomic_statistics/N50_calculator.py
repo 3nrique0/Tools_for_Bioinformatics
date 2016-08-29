@@ -4,7 +4,9 @@
 ## N50 calculated as defined here :
 ## https://en.wikipedia.org/wiki/N50,_L50,_and_related_statistics#N50
 
-## Script realised in august 2016, by Enrique Ortega Abboud at Cirad, AGAP, BURST
+## Made in python 3.4.3
+
+## Script realised in august 2016, by Enrique Ortega Abboud at Cirad, AGAP, BURST team
 
 ## Dev to do:
 
