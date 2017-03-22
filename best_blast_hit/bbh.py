@@ -30,9 +30,18 @@ dfTest = pd.DataFrame({'id' : [1,1,1,2,2,3,3,3,3,4,4,5,6,6,6,7,7],
 # if __name__ == "__main__": __main__()
 
 
+## VARIABLES:
+inputFile = "batch_1_uniq_blastx_eval1_outfmt6.out"
+evalueMax = 1e-4
+
 blastHeader = ['queryId', 'subjectId', 'identity', 'alignmentLength', 'mismatches', 'gapOpens', 'qStart', 'qEnd', 'sStart', 'sEnd', 'evalue', 'bitScore']
 
 
-with open("batch_1_uniq_blastx_eval1_outfmt6.out",'r') as blastHandle:
+with open(inputFile,'r') as blastHandle:
     df = pd.read_csv(blastHandle, sep="\t", names=blastHeader)
+
+
 df2 = df.groupby('queryId').first()
+df3 = df2[df2['evalue'] < evalueMax ]
+
+subjectIdUniq = list(set(sorted(df3['subjectId'])))
