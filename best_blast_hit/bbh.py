@@ -36,12 +36,19 @@ evalueMax = 1e-4
 
 blastHeader = ['queryId', 'subjectId', 'identity', 'alignmentLength', 'mismatches', 'gapOpens', 'qStart', 'qEnd', 'sStart', 'sEnd', 'evalue', 'bitScore']
 
-
+## LOAD BLAST OUTPUT FILE
 with open(inputFile,'r') as blastHandle:
     df = pd.read_csv(blastHandle, sep="\t", names=blastHeader)
 
-
+## TAKE ONLY THE FIRST LINE FOR EACH QUERY ID == TAKE ONLY BEST BLAST HIT
 df2 = df.groupby('queryId').first()
-df3 = df2[df2['evalue'] < evalueMax ]
 
-subjectIdUniq = list(set(sorted(df3['subjectId'])))
+
+with open(inputFile+'.bbh', 'w') as outFile:
+    df2.to_csv(outFile, sep='\t')
+
+print('Ta Daaaaa')
+
+#df3 = df2[df2['evalue'] < evalueMax ]
+
+#subjectIdUniq = list(set(sorted(df3['subjectId'])))
