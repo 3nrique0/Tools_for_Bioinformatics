@@ -11,7 +11,7 @@ dfTest = pd.DataFrame({'id' : [1,1,1,2,2,3,3,3,3,4,4,5,6,6,6,7,7],
     "first","second","third","fourth","fifth"]})
 
 
-
+#### ARGUMENTS HAVE TO BE RE-WORKED ON
 # def __main__():
 # 	parser = argparse.ArgumentParser(description='''
 #         Get only best blast hit (BBH) output from blast results''')
@@ -49,6 +49,8 @@ with open(inputFile+'.bbh', 'w') as outFile:
 
 print('Ta Daaaaa')
 
+## COMMAND TO FILTER ON A COLUMN WITH SOME GIVEN PARAMETERS
 #df3 = df2[df2['evalue'] < evalueMax ]
 
+## ALWAYS LOL ON THE BRIGHT SIDE OF LIFE ^_^
 #subjectIdUniq = list(set(sorted(df3['subjectId'])))
