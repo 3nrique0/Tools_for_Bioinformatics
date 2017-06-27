@@ -51,28 +51,6 @@ def run(args):
             fhout.writelines(outList)
 
 
-    ### CREATE EXIT VALUE FOR THE LOOP
-    #name = 1
-
-    ### REPLACE WITH AN ITERATIVE LOOP
-    #while name != b'':
-
-        ### IMPORT A FULL READ -- 4 LINES
-        #name = fhin.readline()
-        #sequence = fhin.readline()
-        #third = fhin.readline()
-        #quality = fhin.readline()
-
-        ### TRIM THE SEQUENCE AND THE QUALITY
-        #sequence = sequence[0:len(sequence)-n] + sequence[len(sequence)-1:len(sequence)]
-        #quality = quality[0:len(quality)-n] + quality[len(quality)-1:len(quality)]
-
-        ### CONCATENATE THE 4 LINES OF THE READ INTO A LIST
-        #outList = [name, sequence, third, quality]
-
-        ### SAVE THE READ USING THE LIST
-        #fhout.writelines(outList)
-
     ## CLOSE FILES
     fhin.close()
     fhout.close()
@@ -102,13 +80,11 @@ def main():
                     required=True,
                     help='Fastq file compressed with gzip')
 
-
     parser.add_argument('-out',
                     dest='outfile',
                     type=str,
                     required=True,
                     help='''Output will be a fastq file compressed with gzip''')
-
 
     parser.add_argument('-numreads',
                     dest='totalReads',
@@ -118,14 +94,12 @@ def main():
                         To count the number of reads in a compressed file run:
                         $ zcat <FILE.fq.gz> | wc -l | awk '{print $1 / 4}' ''' )
 
-
     parser.add_argument('-sample',
                     dest='readsToSample',
                     type=int,
                     required=True,
                     help='''Number of reads to be sampled.
                     It must be less than the number of total reads in that file.''' )
-
 
     parser.add_argument('-v',
                     dest='verbose',
