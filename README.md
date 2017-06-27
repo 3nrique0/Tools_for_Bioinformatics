@@ -2,6 +2,25 @@
 This are my custom made tools made mostly in python and bash to use them in my bioinformatics problems I encountered.
 If there's a problem making them work or there any comments, please let me know.
 
+## How i try to work:
+*Check that your shebang (#!) is correct, and change it accordingly
+*I try to remain as consistent as I can, although some changes may prevail, as I update to newer versions of python.
+*Sample datasets are still on going changes.
+
+## Latest updates
+*Work on zipped read files*
+
+
+## Description of tools
+
+### Treat reads
+
+
+
+
+
+
+
 ########
 DATA
 The sample data is kept in the Data directory. It is organised in Input and Output, the inputs will thusly available for all tools. These sample data files will be as small as possible to help run the tests as fast as possible.
