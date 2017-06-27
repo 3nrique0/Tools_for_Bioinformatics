@@ -3,17 +3,31 @@ This are my custom made tools made mostly in python and bash to use them in my b
 If there's a problem making them work or there any comments, please let me know.
 
 ## How i try to work:
-*Check that your shebang (#!) is correct, and change it accordingly
-*I try to remain as consistent as I can, although some changes may prevail, as I update to newer versions of python.
-*Sample datasets are still on going changes.
+
+  *Check that your shebang (#!) is correct, and change it accordingly
+  *I try to remain as consistent as I can, although some changes may prevail, as I update to newer versions of python.
+  *Sample datasets are still on going changes.
 
 ## Latest updates
-*Work on zipped read files*
+
+**Work on zipped read files**
 
 
 ## Description of tools
 
 ### Treat reads
+
+Use python to manipulate read files (fastq.gz) whithout unzipping them. The thing I wanted to do is to make it memory efficient, this tools are usually to be used only once, and what slows down the process is mostly the acces to disk data, therefore better to develop on a higher level object oriented language -- Yes, I know i'm not quite using the object oriented part... yet ! My scripts work on a line-by-line way, meaning the memory will not be saturated. :-)
+
+#### Trim reads on 3 prime
+
+So far I've not found a tool which allows to trim a read on 3' by telling it how many nucleotides you want to cut on the right side of the read. So, I made mine. This is particularly usefull when your reads are not of the same size. Tools so far only "keep a certain amount of reads on the left side, thus trimming the right end". This didn't fit my needs. So, there you go !
+
+#### Random pick reads
+
+Do you need to prepare a random dataset from existing data?  Do you need to create a sample file for your workshop? Lucky if you don't, but I do. So as I wanted to randomly pick reads from a file, and not just the head or the tail, I made my tool to do so:
+
+It will randomly pick some reads without replacement. The requirements are the number of reads in your file and the number of reads you want to sample, as well as an input and output file. 
 
 
 
